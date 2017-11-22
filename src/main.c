@@ -2,17 +2,19 @@
 
 void	ft_error(char *message)
 {
-	perror(message);
+	dprintf(2, "%s", message);
 	exit(0);
 }
 
 void	check_file(t_env *e)
 {
-	char	magic;
+	char	*magic;
 
-	magic = ((char*)e->bin)[2];
-	//if (magic == 0x7f)
-		printf("Magic number is %x\n", magic);
+	magic = &((char*)e->bin)[0];
+	if (*magic != 0x7f || *(++magic) != 0x45 || *(++magic) != 0x4c || *(++magic) != 0x46)
+		ft_error("File is not ELF format\n");
+	if (*(++magic) != 2)
+		ft_error("ELF File is not 64 bits\n");
 }
 
 void	map_file(char *file, t_env *e)
