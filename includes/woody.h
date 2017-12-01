@@ -10,8 +10,11 @@
 
 typedef struct	s_env
 {
-	void	*bin;
-	int		size;
+	void		*bin;
+	int			size;
+	Elf64_Ehdr	*elf_head;
+	Elf64_Phdr	*elf_prog;
+	Elf64_Shdr	*elf_sec;
 }				t_env;
 
 #endif

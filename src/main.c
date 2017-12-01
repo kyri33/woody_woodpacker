@@ -15,6 +15,9 @@ void	check_file(t_env *e)
 		ft_error("File is not ELF format\n");
 	if (*(++magic) != 2)
 		ft_error("ELF File is not 64 bits\n");
+	e->elf_head = (Elf64_Ehdr *)e->bin;
+	e->elf_prog = (Elf64_Phdr *)(e->bin + e->elf_head->e_phoff);
+	e->elf_sec = (Elf64_Shdr *)(e->bin + e->elf_head->e_shoff);
 }
 
 void	map_file(char *file, t_env *e)
