@@ -15,6 +15,7 @@ typedef struct	s_env
 	Elf64_Ehdr	*elf_head;
 	Elf64_Phdr	*elf_prog;
 	Elf64_Shdr	*elf_sec;
+	int			numheads;
 }				t_env;
 
 #endif
