@@ -18,6 +18,7 @@ void	check_file(t_env *e)
 	e->elf_head = (Elf64_Ehdr *)e->bin;
 	e->numheads = e->elf_head->e_phnum;
 	e->elf_prog = (Elf64_Phdr *)(e->bin + e->elf_head->e_phoff);
+	e->entry = e->elf_head->e_entry;
 }
 
 void	map_file(char *file, t_env *e)
