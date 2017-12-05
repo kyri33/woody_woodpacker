@@ -1,6 +1,6 @@
 NAME = woody_woodpacker
 
-SRC = src/main.c
+SRC = src/main.c src/analyse.c libft/libft.a
 
 FLAGS = gcc -g3 -Wall -Werror -Wextra -I includes -o
 

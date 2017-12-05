@@ -44,4 +44,44 @@ int	main(int argc, char **argv)
 	}
 	map_file(argv[1], &e);
 	check_file(&e);
+
+	Elf64_Shdr	*text_sec;
+	if ((text_sec = find_elf_sec(&e, ".text")) == NULL)
+		ft_error("No .text section found\n");
+	int i = 0;
+	unsigned char *bytes = (unsigned char *) e.bin;
+	while (i < (int)text_sec->sh_size)
+	{
+		printf("%02x%s",  bytes[text_sec->sh_offset + i], ((i % 10 == 0 && i > 0) ? "\n" : " "));
+		i++;
+	}
+	printf("\ntext size %llu\n", text_sec->sh_size);	
+	int len, start;
+
+	find_elf_gap(&e, &start, &len);
+	printf("\ngap size %i\n", len);
+	i = 0;
+	while (i < len + 20)
+	{
+		printf("%02x%s", bytes[start - 10 + i], ((i % 10 == 0 && i > 0) ? "\n" : " "));
+		i++;
+	}
+	printf("\n");
+
+	int j = 0;
+	while (j < e.elf_head->e_phnum)
+	{
+		if (e.elf_prog[i].p_type == PT_LOAD) {
+			e.elf_prog = &e.elf_prog[i];
+			break;
+		}
+		j++;
+	}
+	i = 0;
+	printf("\nprogram header\n");
+	while (i < (int)e.elf_prog->p_filesz)
+	{
+		printf("%02x%s", bytes[e.elf_prog->p_offset + i], ((i % 10 == 0 && i > 0) ? "\n" : " " ));
+		i++;
+	} 
 }
