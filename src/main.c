@@ -46,7 +46,7 @@ int	main(int argc, char **argv)
 	check_file(&e);
 
 	Elf64_Shdr	*text_sec;
-	if ((text_sec = find_elf_sec(&e, ".text")) == NULL)
+	if ((text_sec = find_elf_sec(&e, ".data")) == NULL)
 		ft_error("No .text section found\n");
 	int i = 0;
 	unsigned char *bytes = (unsigned char *) e.bin;
@@ -56,7 +56,7 @@ int	main(int argc, char **argv)
 		i++;
 	}
 	printf("\ntext size %llu\n", text_sec->sh_size);	
-	int len, start;
+	/*int len, start;
 
 	find_elf_gap(&e, &start, &len);
 	printf("\ngap size %i\n", len);
@@ -65,13 +65,19 @@ int	main(int argc, char **argv)
 	{
 		printf("%02x%s", bytes[start - 10 + i], ((i % 10 == 0 && i > 0) ? "\n" : " "));
 		i++;
-	}
+	}*/
 	printf("\n");
 
 	int j = 0;
 	while (j < e.elf_head->e_phnum)
 	{
-		if (e.elf_prog[i].p_type == PT_LOAD) {
+		printf("\nflags %02x\n", e.elf_prog[i].p_flags);
+		if (e.elf_prog[i].p_type == PT_LOAD && e.elf_prog[i].p_flags & 0x011) {
+			printf("\nfound 1\n");
+		}
+		else if (e.elf_prog[i].p_type == PT_LOAD)
+		{
+			printf("\nfound 2\n");
 			e.elf_prog = &e.elf_prog[i];
 			break;
 		}
@@ -79,7 +85,7 @@ int	main(int argc, char **argv)
 	}
 	i = 0;
 	printf("\nprogram header\n");
-	while (i < (int)e.elf_prog->p_filesz)
+	while (i < (int)e.elf_prog->p_memsz)
 	{
 		printf("%02x%s", bytes[e.elf_prog->p_offset + i], ((i % 10 == 0 && i > 0) ? "\n" : " " ));
 		i++;
