@@ -22,5 +22,6 @@ typedef struct	s_env
 
 Elf64_Shdr	*find_elf_sec(t_env *e, char *sname);
 void		find_elf_gap(t_env *e, int *start, int *len);
+Elf64_Phdr	*find_load(t_env *e);
 
 #endif

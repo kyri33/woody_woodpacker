@@ -46,48 +46,43 @@ int	main(int argc, char **argv)
 	check_file(&e);
 
 	Elf64_Shdr	*text_sec;
-	if ((text_sec = find_elf_sec(&e, ".data")) == NULL)
+	if ((text_sec = find_elf_sec(&e, ".text")) == NULL)
 		ft_error("No .text section found\n");
-	int i = 0;
-	unsigned char *bytes = (unsigned char *) e.bin;
-	while (i < (int)text_sec->sh_size)
-	{
-		printf("%02x%s",  bytes[text_sec->sh_offset + i], ((i % 10 == 0 && i > 0) ? "\n" : " "));
-		i++;
-	}
-	printf("\ntext size %llu\n", text_sec->sh_size);	
+	//int i = 0;
+	//unsigned char *bytes = (unsigned char *) e.bin;
 	/*int len, start;
 
 	find_elf_gap(&e, &start, &len);
 	printf("\ngap size %i\n", len);
 	i = 0;
-	while (i < len + 20)
+	while (i < len)
 	{
-		printf("%02x%s", bytes[start - 10 + i], ((i % 10 == 0 && i > 0) ? "\n" : " "));
+		printf("%02x%s", bytes[start + i], ((i % 10 == 0 && i > 0) ? "\n" : " "));
 		i++;
 	}*/
 	printf("\n");
 
-	int j = 0;
+	/*int j = 0;
 	while (j < e.elf_head->e_phnum)
 	{
-		printf("\nflags %02x\n", e.elf_prog[i].p_flags);
-		if (e.elf_prog[i].p_type == PT_LOAD && e.elf_prog[i].p_flags & 0x011) {
-			printf("\nfound 1\n");
-		}
-		else if (e.elf_prog[i].p_type == PT_LOAD)
+		if (e.elf_prog[i].p_type == PT_LOAD)
 		{
-			printf("\nfound 2\n");
+			printf("\nfound1\n");
 			e.elf_prog = &e.elf_prog[i];
 			break;
 		}
 		j++;
-	}
-	i = 0;
-	printf("\nprogram header\n");
-	while (i < (int)e.elf_prog->p_memsz)
-	{
-		printf("%02x%s", bytes[e.elf_prog->p_offset + i], ((i % 10 == 0 && i > 0) ? "\n" : " " ));
-		i++;
-	} 
+	}*/
+	Elf64_Phdr *hdd = find_load(&e);
+	uint32_t addr = hdd->p_vaddr;
+	printf("address load head %lx\n", (unsigned long)addr);
+	uint32_t filesize = hdd->p_filesz;
+	printf("prog size %lx\n", (unsigned long)filesize);
+	uint32_t memsize = hdd->p_memsz;
+	printf("prog memsz %lx\n", (unsigned long)memsize);
+	uint32_t jmp_addr = ((hdd->p_vaddr + hdd->p_filesz) - e.entry) * -1;
+	printf("jmp address %lx\n", (unsigned long)jmp_addr);
+	printf("entry address %lx\n", (unsigned long)e.entry);
+	uint32_t secaddr = text_sec->sh_addr;
+	printf("text sec address %lx\n", (unsigned long)secaddr);
 }

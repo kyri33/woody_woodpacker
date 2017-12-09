@@ -43,3 +43,24 @@ void	find_elf_gap(t_env *e, int *start, int *len)
 	*start = end;
 	*len = gap;
 }
+
+Elf64_Phdr	*find_load(t_env *e)
+{
+	int			i;
+	uint32_t	addr;
+	int			last;
+
+	i = 0;
+	last = 0;
+	addr = 0;
+	while (i < e->numheads)
+	{
+		if (e->elf_prog[i].p_type == PT_LOAD && 
+			addr <= (e->elf_prog[i].p_vaddr + e->elf_prog[i].p_memsz)) {
+			last = i;
+			addr = e->elf_prog[i].p_vaddr + e->elf_prog[i].p_memsz;
+		}
+		i++;
+	}
+	return &e->elf_prog[last];
+}
